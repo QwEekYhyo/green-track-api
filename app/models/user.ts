@@ -6,7 +6,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
-  uids: ['email'],
+  uids: ['firstName', 'surname'],
   passwordColumnName: 'password',
 })
 
@@ -15,13 +15,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare fullName: string | null
+  declare firstName: string | null
 
   @column()
-  declare email: string
+  declare surname: string | null
 
   @column()
   declare password: string
+
+  @column()
+  declare isAgent: boolean
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
