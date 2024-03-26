@@ -1,0 +1,16 @@
+version: '3.8'
+
+volumes:
+  data:
+
+services:
+  database:
+    image: postgres:16
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 'Test1234'
+      POSTGRES_USER: postgres
+      POSTGRES_DB: greentrack
+    ports:
+      - "5432:5432"
