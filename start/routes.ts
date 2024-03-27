@@ -9,7 +9,8 @@
 
 import router from "@adonisjs/core/services/router";
 
-import UsersController from "#controllers/users_controller";
+import AuthController from "#controllers/auth_controller";
+import { middleware } from "./kernel.js";
 
 router.get("/", async () => {
     return {
@@ -17,4 +18,23 @@ router.get("/", async () => {
     };
 });
 
-router.post("/register", [UsersController, "register"]);
+router
+    .group(() => {
+        router.post("/register", [AuthController, "register"]);
+        router.post("/login", [AuthController, "login"]);
+    })
+    .prefix("/auth");
+
+router
+    .group(() => {
+        router.get("/hello", async ({ auth }) => {
+            return {
+                hello: auth.user?.serialize().firstName,
+            };
+        });
+    })
+    .use(
+        middleware.auth({
+            guards: ["api"],
+        })
+    );

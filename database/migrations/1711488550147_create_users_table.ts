@@ -8,6 +8,7 @@ export default class extends BaseSchema {
             table.increments("id");
             table.string("first_name").notNullable();
             table.string("surname").notNullable();
+            table.string("username").notNullable();
             table.string("password");
             table.boolean("is_agent").notNullable().defaultTo(false);
 
