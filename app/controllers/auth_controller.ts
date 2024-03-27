@@ -9,8 +9,7 @@ export default class AuthController {
         const credentials = request.all();
         const payload = await registerValidator.validate(credentials);
 
-        // only check for surname, we need to also check for first name
-        if (!(await User.findBy("surname", payload.surname))) {
+        if (!(await User.findBy("username", payload.username))) {
             return await User.create({
                 firstName: payload.firstName,
                 surname: payload.surname,
