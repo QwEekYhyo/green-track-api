@@ -10,12 +10,17 @@ export default class AuthController {
         const payload = await registerValidator.validate(credentials);
 
         if (!(await User.findBy("username", payload.username))) {
-            return await User.create({
+            await User.create({
                 firstName: payload.firstName,
                 surname: payload.surname,
                 username: payload.username,
                 password: payload.password,
             });
+
+            return {
+                "created user": payload.firstName,
+                "with username": payload.username,
+            };
         }
     }
 
@@ -24,6 +29,9 @@ export default class AuthController {
         const user = await User.verifyCredentials(credentials.username, credentials.password);
         const token = await User.accessTokens.create(user);
 
-        return token;
+        return {
+            type: "bearer",
+            token: token.value!.release(),
+        };
     }
 }

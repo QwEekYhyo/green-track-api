@@ -7,7 +7,7 @@ export default class ReportsController {
     async addReport({ request, auth }: HttpContext) {
         const reportInfo = await addReportValidator.validate(request.all());
         const reportDate = reportInfo.date ? DateTime.fromJSDate(reportInfo.date) : undefined;
-        const report = await auth.user?.related("reports").create({
+        await auth.user?.related("reports").create({
             title: reportInfo.title,
             isBlockage: reportInfo.isBlockage,
             date: reportDate,
@@ -16,6 +16,9 @@ export default class ReportsController {
             zipCode: reportInfo.zipCode,
             description: reportInfo.description,
         });
-        return report;
+
+        return {
+            "added report": reportInfo.title,
+        };
     }
 }
