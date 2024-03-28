@@ -10,6 +10,7 @@
 import router from "@adonisjs/core/services/router";
 
 import AuthController from "#controllers/auth_controller";
+import ReportsController from "#controllers/reports_controller";
 import { middleware } from "./kernel.js";
 
 router.get("/", async () => {
@@ -32,6 +33,7 @@ router
                 hello: auth.user?.serialize().firstName,
             };
         });
+        router.post("/add-report", [ReportsController, "addReport"]);
     })
     .use(
         middleware.auth({

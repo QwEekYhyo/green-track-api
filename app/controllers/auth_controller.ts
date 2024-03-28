@@ -24,9 +24,6 @@ export default class AuthController {
         const user = await User.verifyCredentials(credentials.username, credentials.password);
         const token = await User.accessTokens.create(user);
 
-        return {
-            type: "bearer",
-            value: token.value!.release(),
-        };
+        return token;
     }
 }
