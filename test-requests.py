@@ -1,6 +1,16 @@
 import requests
+import json
 
 token = None
+
+def pretty(json_response):
+    print(json.dumps(
+        json_response,
+        sort_keys=True,
+        indent=4,
+        separators=(",", ": "),
+        ensure_ascii=False
+    ))
 
 def print_help():
     print(" --- Utils ---")
@@ -45,7 +55,7 @@ def register():
                username, "password": password}
     r = requests.post("http://localhost:3333/auth/register", json=payload,
                       headers=headers)
-    print(r.json())
+    pretty(r.json())
     print()
 
 def login():
@@ -57,7 +67,7 @@ def login():
     payload = {"username": username, "password": password}
     r = requests.post("http://localhost:3333/auth/login", json=payload,
                       headers=headers)
-    print(r.json())
+    pretty(r.json())
     if r.ok:
         token = r.json()["token"]
     print()
@@ -66,7 +76,7 @@ def hello():
     if token is not None:
         headers = {"Authorization": "Bearer " + token}
         r = requests.get("http://localhost:3333/hello", headers=headers)
-        print(r.json())
+        pretty(r.json())
         print()
 
 def add_report():
@@ -89,18 +99,18 @@ def add_report():
         }
         r = requests.post("http://localhost:3333/reports", json=payload,
                           headers=headers)
-        print(r.json())
+        pretty(r.json())
 
 def me():
     if token is not None:
         headers = {"Authorization": "Bearer " + token,
                    "Content-Type": "application/json"}
         r = requests.get("http://localhost:3333/me", headers=headers)
-        print(r.json())
+        pretty(r.json())
 
 def list_reports():
     r = requests.get("http://localhost:3333/reports")
-    print(r.json())
+    pretty(r.json())
 
 def main():
     print_help()
