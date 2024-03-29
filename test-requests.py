@@ -11,6 +11,7 @@ def print_help():
     print("l - login as user")
     print(" --- Authenticated requests ---")
     print("hi - hello")
+    print("me - me")
     print("a - add report")
     print()
 
@@ -24,6 +25,8 @@ def user_choice():
         hello()
     elif choice == "a":
         add_report()
+    elif choice == "me":
+        me()
     elif choice == "q":
         exit()
     else:
@@ -57,14 +60,14 @@ def login():
     print()
 
 def hello():
-    if not token == None:
+    if token is not None:
         headers = {"Authorization": "Bearer " + token}
         r = requests.get("http://localhost:3333/hello", headers=headers)
         print(r.json())
         print()
 
 def add_report():
-    if not token == None:
+    if token is not None:
         title = input("What is the title of your report ? ")
         is_blockage = input("Is your report a blockage ? ")
         address = input("What is the address of your report ? ")
@@ -84,7 +87,13 @@ def add_report():
         r = requests.post("http://localhost:3333/add-report", json=payload,
                           headers=headers)
         print(r.json())
-    return
+
+def me():
+    if token is not None:
+        headers = {"Authorization": "Bearer " + token,
+                   "Content-Type": "application/json"}
+        r = requests.get("http://localhost:3333/me", headers=headers)
+        print(r.json())
 
 def main():
     print_help()

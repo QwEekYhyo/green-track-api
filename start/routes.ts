@@ -11,6 +11,7 @@ import router from "@adonisjs/core/services/router";
 
 import AuthController from "#controllers/auth_controller";
 import ReportsController from "#controllers/reports_controller";
+import UsersController from "#controllers/users_controller";
 import { middleware } from "./kernel.js";
 
 router.get("/", async () => {
@@ -18,6 +19,8 @@ router.get("/", async () => {
         hello: "world",
     };
 });
+
+router.get("/reports", [ReportsController, "all"]);
 
 router
     .group(() => {
@@ -30,9 +33,10 @@ router
     .group(() => {
         router.get("/hello", async ({ auth }) => {
             return {
-                hello: auth.user?.serialize().firstName,
+                hello: auth.user!.serialize().firstName,
             };
         });
+        router.get("/me", [UsersController, "me"]);
         router.post("/add-report", [ReportsController, "addReport"]);
     })
     .use(

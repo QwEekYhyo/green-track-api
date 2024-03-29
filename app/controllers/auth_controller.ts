@@ -10,17 +10,12 @@ export default class AuthController {
         const payload = await registerValidator.validate(credentials);
 
         if (!(await User.findBy("username", payload.username))) {
-            await User.create({
+            return await User.create({
                 firstName: payload.firstName,
                 surname: payload.surname,
                 username: payload.username,
                 password: payload.password,
             });
-
-            return {
-                "created user": payload.firstName,
-                "with username": payload.username,
-            };
         }
     }
 
