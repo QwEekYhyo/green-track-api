@@ -37,7 +37,7 @@ router
             };
         });
         router.get("/me", [UsersController, "me"]);
-        router.post("/add-report", [ReportsController, "addReport"]);
+        router.post("/reports", [ReportsController, "addReport"]);
     })
     .use(
         middleware.auth({

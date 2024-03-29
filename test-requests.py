@@ -5,6 +5,7 @@ token = None
 def print_help():
     print(" --- Utils ---")
     print("h - help")
+    print("ls - list reports")
     print("q - quit")
     print(" --- Authentication ---")
     print("r - register user")
@@ -27,6 +28,8 @@ def user_choice():
         add_report()
     elif choice == "me":
         me()
+    elif choice == "ls":
+        list_reports()
     elif choice == "q":
         exit()
     else:
@@ -84,7 +87,7 @@ def add_report():
             "zipCode": zip_code,
             "description": description
         }
-        r = requests.post("http://localhost:3333/add-report", json=payload,
+        r = requests.post("http://localhost:3333/reports", json=payload,
                           headers=headers)
         print(r.json())
 
@@ -94,6 +97,10 @@ def me():
                    "Content-Type": "application/json"}
         r = requests.get("http://localhost:3333/me", headers=headers)
         print(r.json())
+
+def list_reports():
+    r = requests.get("http://localhost:3333/reports")
+    print(r.json())
 
 def main():
     print_help()
