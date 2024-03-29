@@ -1,8 +1,8 @@
 import type { HttpContext } from "@adonisjs/core/http";
-import { errors } from "@adonisjs/auth";
 import { DateTime } from "luxon";
 
 import { addReportValidator, updateReportValidator } from "#validators/report";
+import UnauthorizedException from "#exceptions/unauthorized_exception";
 import Report from "#models/report";
 
 export default class ReportsController {
@@ -23,9 +23,7 @@ export default class ReportsController {
         const updateInfo = await request.validateUsing(updateReportValidator);
         const report = await Report.findOrFail(updateInfo.id);
         if (auth.user!.id != report.userId)
-            throw new errors.E_UNAUTHORIZED_ACCESS("Your are not the author of this report", {
-                guardDriverName: "accessToken",
-            });
+            throw new UnauthorizedException("Your are not the author of this report");
 
         const reportDate = updateInfo.date ? DateTime.fromJSDate(updateInfo.date) : undefined;
         return await report

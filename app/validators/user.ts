@@ -4,6 +4,7 @@ export const registerValidator = vine.compile(
     vine.object({
         firstName: vine.string().trim().maxLength(30),
         surname: vine.string().trim().maxLength(30),
+        isAgent: vine.boolean().optional(),
         username: vine.string().trim().maxLength(30),
         password: vine.string().trim().minLength(5),
     })

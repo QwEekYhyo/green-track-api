@@ -1,7 +1,8 @@
 import requests
 import json
 
-token = None
+TOKEN = None
+DEBUG = False
 
 def pretty(json_response):
     print(json.dumps(
@@ -51,18 +52,25 @@ def user_choice():
 def register():
     first_name = input("What is your first name ? ")
     last_name = input("What is your last name ? ")
+    is_agent = input("Are you an agent ? ")
     username = input("What is your username ? ")
     password = input("What is your password ? ")
     headers = {"Content-Type": "application/json"}
-    payload = {"firstName": first_name, "surname": last_name, "username":
-               username, "password": password}
+    payload = {
+        "firstName": first_name,
+        "surname": last_name,
+        "username": username,
+        "password": password
+    }
+    if not is_agent == "":
+        payload["isAgent"] = is_agent
     r = requests.post("http://localhost:3333/auth/register", json=payload,
                       headers=headers)
     pretty(r.json())
     print()
 
 def login():
-    global token
+    global TOKEN
 
     username = input("What is your username ? ")
     password = input("What is your password ? ")
@@ -72,25 +80,25 @@ def login():
                       headers=headers)
     pretty(r.json())
     if r.ok:
-        token = r.json()["token"]
+        TOKEN = r.json()["token"]
     print()
 
 def hello():
-    if token is not None:
-        headers = {"Authorization": "Bearer " + token}
+    if TOKEN is not None:
+        headers = {"Authorization": "Bearer " + TOKEN}
         r = requests.get("http://localhost:3333/hello", headers=headers)
         pretty(r.json())
         print()
 
 def add_report():
-    if token is not None:
+    if TOKEN is not None:
         title = input("What is the title of your report ? ")
         is_blockage = input("Is your report a blockage ? ")
         address = input("What is the address of your report ? ")
         city = input("What is the city of your report ? ")
         zip_code = input("What is the zip code of your city ? ")
         description = input("What is the description of your report ? ")
-        headers = {"Authorization": "Bearer " + token,
+        headers = {"Authorization": "Bearer " + TOKEN,
                    "Content-Type": "application/json"}
         payload = {
             "title": title,
@@ -105,8 +113,8 @@ def add_report():
         pretty(r.json())
 
 def me():
-    if token is not None:
-        headers = {"Authorization": "Bearer " + token}
+    if TOKEN is not None:
+        headers = {"Authorization": "Bearer " + TOKEN}
         r = requests.get("http://localhost:3333/me", headers=headers)
         pretty(r.json())
 
@@ -115,7 +123,7 @@ def list_reports():
     pretty(r.json())
 
 def update_report():
-    if token is not None:
+    if TOKEN is not None:
         payload = {}
         id = int(input("What is the id of your report ? "))
         payload["id"] = id
@@ -137,11 +145,13 @@ def update_report():
         description = input("What is the description of your report ? ")
         if not description == "":
             payload["description"] = description
-        headers = {"Authorization": "Bearer " + token,
+        headers = {"Authorization": "Bearer " + TOKEN,
                    "Content-Type": "application/json"}
 
         r = requests.patch("http://localhost:3333/reports", json=payload,
                           headers=headers)
+        if DEBUG:
+            print(r.text)
         pretty(r.json())
 
 def main():
