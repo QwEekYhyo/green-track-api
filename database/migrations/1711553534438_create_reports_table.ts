@@ -1,5 +1,4 @@
 import { BaseSchema } from "@adonisjs/lucid/schema";
-import { DateTime } from "luxon";
 
 export default class extends BaseSchema {
     protected tableName = "reports";
@@ -9,7 +8,7 @@ export default class extends BaseSchema {
             table.increments("id").primary();
             table.string("title").notNullable();
             table.boolean("is_blockage").notNullable();
-            table.timestamp("date", { useTz: true }).notNullable().defaultTo(DateTime.now());
+            table.timestamp("date", { useTz: true }).notNullable().defaultTo(this.now());
             table.text("address").notNullable();
             table.string("city").notNullable();
             table.string("zip_code").notNullable();
