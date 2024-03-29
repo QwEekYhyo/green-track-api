@@ -22,7 +22,7 @@ export default class ReportsController {
     async updateReport({ request, auth }: HttpContext) {
         const updateInfo = await request.validateUsing(updateReportValidator);
         const report = await Report.findOrFail(updateInfo.id);
-        if (auth.user!.id != report.userId)
+        if (auth.user!.id != report.userId && !auth.user!.isAgent)
             throw new UnauthorizedException("Your are not the author of this report");
 
         const reportDate = updateInfo.date ? DateTime.fromJSDate(updateInfo.date) : undefined;
