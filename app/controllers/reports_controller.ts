@@ -1,7 +1,8 @@
 import type { HttpContext } from "@adonisjs/core/http";
+import { errors } from "@adonisjs/auth";
 import { DateTime } from "luxon";
 
-import { addReportValidator } from "#validators/report";
+import { addReportValidator, updateReportValidator } from "#validators/report";
 import Report from "#models/report";
 
 export default class ReportsController {
@@ -13,13 +14,25 @@ export default class ReportsController {
         const reportInfo = await request.validateUsing(addReportValidator);
         const reportDate = reportInfo.date ? DateTime.fromJSDate(reportInfo.date) : undefined;
         return await auth.user!.related("reports").create({
-            title: reportInfo.title,
-            isBlockage: reportInfo.isBlockage,
+            ...reportInfo,
             date: reportDate,
-            address: reportInfo.address,
-            city: reportInfo.city,
-            zipCode: reportInfo.zipCode,
-            description: reportInfo.description,
         });
+    }
+
+    async updateReport({ request, auth }: HttpContext) {
+        const updateInfo = await request.validateUsing(updateReportValidator);
+        const report = await Report.findOrFail(updateInfo.id);
+        if (auth.user!.id != report.userId)
+            throw new errors.E_UNAUTHORIZED_ACCESS("Your are not the author of this report", {
+                guardDriverName: "accessToken",
+            });
+
+        const reportDate = updateInfo.date ? DateTime.fromJSDate(updateInfo.date) : undefined;
+        return await report
+            .merge({
+                ...updateInfo,
+                date: reportDate,
+            })
+            .save();
     }
 }

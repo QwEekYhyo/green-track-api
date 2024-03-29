@@ -24,6 +24,7 @@ def print_help():
     print("hi - hello")
     print("me - me")
     print("a - add report")
+    print("u - update report")
     print()
 
 def user_choice():
@@ -36,6 +37,8 @@ def user_choice():
         hello()
     elif choice == "a":
         add_report()
+    elif choice == "u":
+        update_report()
     elif choice == "me":
         me()
     elif choice == "ls":
@@ -103,14 +106,43 @@ def add_report():
 
 def me():
     if token is not None:
-        headers = {"Authorization": "Bearer " + token,
-                   "Content-Type": "application/json"}
+        headers = {"Authorization": "Bearer " + token}
         r = requests.get("http://localhost:3333/me", headers=headers)
         pretty(r.json())
 
 def list_reports():
     r = requests.get("http://localhost:3333/reports")
     pretty(r.json())
+
+def update_report():
+    if token is not None:
+        payload = {}
+        id = int(input("What is the id of your report ? "))
+        payload["id"] = id
+        title = input("What is the title of your report ? ")
+        if not title == "":
+            payload["title"] = title
+        is_blockage = input("Is your report a blockage ? ")
+        if not is_blockage == "":
+            payload["isBlockage"] = is_blockage
+        address = input("What is the address of your report ? ")
+        if not address == "":
+            payload["address"] = address
+        city = input("What is the city of your report ? ")
+        if not city == "":
+            payload["city"] = city
+        zip_code = input("What is the zip code of your city ? ")
+        if not zip_code == "":
+            payload["zipCode"] = zip_code
+        description = input("What is the description of your report ? ")
+        if not description == "":
+            payload["description"] = description
+        headers = {"Authorization": "Bearer " + token,
+                   "Content-Type": "application/json"}
+
+        r = requests.patch("http://localhost:3333/reports", json=payload,
+                          headers=headers)
+        pretty(r.json())
 
 def main():
     print_help()

@@ -38,6 +38,8 @@ router
         });
         router.get("/me", [UsersController, "me"]);
         router.post("/reports", [ReportsController, "addReport"]);
+        router.put("/reports", [ReportsController, "updateReport"]);
+        router.patch("/reports", [ReportsController, "updateReport"]);
     })
     .use(
         middleware.auth({
