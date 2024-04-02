@@ -8,6 +8,7 @@
 */
 
 import router from "@adonisjs/core/services/router";
+import app from "@adonisjs/core/services/app";
 
 import AuthController from "#controllers/auth_controller";
 import ReportsController from "#controllers/reports_controller";
@@ -21,6 +22,17 @@ router.get("/", async () => {
 });
 
 router.get("/reports", [ReportsController, "all"]);
+
+router.post("/image", async ({ request }) => {
+    const image = request.file("file");
+    console.log(image);
+    await image?.move(app.makePath("uploads"));
+    return image;
+});
+router.get("/image", async ({ response }) => {
+    const absolutePath = app.makePath("uploads/test.png");
+    return response.download(absolutePath);
+});
 
 router
     .group(() => {
