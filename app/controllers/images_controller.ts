@@ -4,9 +4,10 @@ import { cuid } from "@adonisjs/core/helpers";
 
 import { uploadImageValidator } from "#validators/image";
 import Report from "#models/report";
+import UnauthorizedException from "#exceptions/unauthorized_exception";
 
 export default class ImagesController {
-    async uploadImage({ request }: HttpContext) {
+    async uploadImage({ request, auth }: HttpContext) {
         const truc = {
             ...request.all(),
             ...request.allFiles()
@@ -15,6 +16,10 @@ export default class ImagesController {
 
         const image = imageInfo.image;
         const report = await Report.findOrFail(imageInfo.reportId);
+
+        if (auth.user!.id != report.userId && !auth.user!.isAgent)
+            throw new UnauthorizedException("Your are not the author of this report");
+
         await image!.move(app.makePath("uploads"), {
             name: `${cuid()}.${image.extname}`
         });

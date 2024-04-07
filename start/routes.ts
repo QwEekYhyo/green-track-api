@@ -22,8 +22,6 @@ router.get("/", async () => {
 });
 
 router.get("/reports", [ReportsController, "all"]);
-
-router.post("/images", [ImagesController, "uploadImage"]);
 router.get("/images/*", [ImagesController, "downloadImage"]);
 
 router
@@ -44,6 +42,7 @@ router
         router.post("/reports", [ReportsController, "addReport"]);
         router.put("/reports", [ReportsController, "updateReport"]);
         router.patch("/reports", [ReportsController, "updateReport"]);
+        router.post("/images", [ImagesController, "uploadImage"]);
     })
     .use(
         middleware.auth({
