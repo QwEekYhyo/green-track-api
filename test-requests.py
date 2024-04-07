@@ -158,10 +158,14 @@ def update_report():
         pretty(r.json())
 
 def upload_files():
+    report_id = int(input("What is the id of your report ? "))
+    filepath = input("What is the path of your image ? ")
+
     files = {
-        "file": open("test.png", "rb")
+        "image": open(filepath, "rb"),
+        "reportId": (None, json.dumps(report_id), "application/json")
     }
-    r = requests.post("http://localhost:3333/image",
+    r = requests.post("http://localhost:3333/images",
                       files=files)
     pretty(r.json())
     print()

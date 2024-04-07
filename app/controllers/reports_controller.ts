@@ -11,6 +11,7 @@ export default class ReportsController {
     }
 
     async addReport({ request, auth }: HttpContext) {
+        console.log(request.body())
         const reportInfo = await request.validateUsing(addReportValidator);
         const reportDate = reportInfo.date ? DateTime.fromJSDate(reportInfo.date) : undefined;
         return await auth.user!.related("reports").create({

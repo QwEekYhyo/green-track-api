@@ -13,6 +13,7 @@ import app from "@adonisjs/core/services/app";
 import AuthController from "#controllers/auth_controller";
 import ReportsController from "#controllers/reports_controller";
 import UsersController from "#controllers/users_controller";
+import ImagesController from "#controllers/images_controller";
 import { middleware } from "./kernel.js";
 
 router.get("/", async () => {
@@ -23,13 +24,8 @@ router.get("/", async () => {
 
 router.get("/reports", [ReportsController, "all"]);
 
-router.post("/image", async ({ request }) => {
-    const image = request.file("file");
-    console.log(image);
-    await image?.move(app.makePath("uploads"));
-    return image;
-});
-router.get("/image", async ({ response }) => {
+router.post("/images", [ImagesController, "uploadImage"]);
+router.get("/images", async ({ response }) => {
     const absolutePath = app.makePath("uploads/test.png");
     return response.download(absolutePath);
 });
