@@ -10,7 +10,7 @@ export default class ImagesController {
     async uploadImage({ request, auth }: HttpContext) {
         const truc = {
             ...request.all(),
-            ...request.allFiles()
+            ...request.allFiles(),
         };
         const imageInfo = await uploadImageValidator.validate(truc);
 
@@ -21,7 +21,7 @@ export default class ImagesController {
             throw new UnauthorizedException("Your are not the author of this report");
 
         await image!.move(app.makePath("uploads"), {
-            name: `${cuid()}.${image.extname}`
+            name: `${cuid()}.${image.extname}`,
         });
 
         return await report.related("images").create({

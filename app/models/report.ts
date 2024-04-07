@@ -35,7 +35,7 @@ export default class Report extends BaseModel {
 
     @belongsTo(() => User)
     declare author: BelongsTo<typeof User>;
-    
+
     @hasMany(() => Image)
     declare images: HasMany<typeof Image>;
 
