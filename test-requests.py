@@ -26,6 +26,7 @@ def print_help():
     print("me - me")
     print("a - add report")
     print("u - update report")
+    print("f - upload files")
     print()
 
 def user_choice():
@@ -40,6 +41,8 @@ def user_choice():
         add_report()
     elif choice == "u":
         update_report()
+    elif choice == "f":
+        upload_files()
     elif choice == "me":
         me()
     elif choice == "ls":
@@ -153,6 +156,21 @@ def update_report():
         if DEBUG:
             print(r.text)
         pretty(r.json())
+
+def upload_files():
+    if TOKEN is not None:
+        report_id = int(input("What is the id of your report ? "))
+        filepath = input("What is the path of your image ? ")
+
+        files = {
+            "image": open(filepath, "rb"),
+            "reportId": (None, json.dumps(report_id), "application/json")
+        }
+        headers = {"Authorization": "Bearer " + TOKEN}
+        r = requests.post("http://localhost:3333/images",
+                          files=files, headers=headers)
+        pretty(r.json())
+        print()
 
 def main():
     print_help()

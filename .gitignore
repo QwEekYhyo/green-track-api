@@ -129,4 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Logan Lucas added stuff
 build
+uploads
+test.png
