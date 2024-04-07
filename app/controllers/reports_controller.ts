@@ -7,7 +7,7 @@ import Report from "#models/report";
 
 export default class ReportsController {
     async all() {
-        return await Report.query().preload("author");
+        return await Report.query().preload("author").preload("images");
     }
 
     async addReport({ request, auth }: HttpContext) {

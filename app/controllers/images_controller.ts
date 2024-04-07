@@ -23,4 +23,10 @@ export default class ImagesController {
             fileName: image.fileName,
         });
     }
+
+    async downloadImage({ request, response }: HttpContext) {
+        const fileName = request.param("*")[0];
+        const path = app.makePath("uploads", fileName);
+        return response.download(path);
+    }
 }
