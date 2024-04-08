@@ -160,12 +160,16 @@ def update_report():
 def upload_files():
     if TOKEN is not None:
         report_id = int(input("What is the id of your report ? "))
-        filepath = input("What is the path of your image ? ")
 
-        files = {
-            "image": open(filepath, "rb"),
-            "reportId": (None, json.dumps(report_id), "application/json")
-        }
+        files = []
+        filepath = "nothing"
+        while filepath != "":
+            filepath = input("What is the path of your image ? ")
+            if filepath != "":
+                files.append(("images", open(filepath, "rb")))
+
+        files.append(("reportId", (None, json.dumps(report_id),
+                    "application/json")))
         headers = {"Authorization": "Bearer " + TOKEN}
         r = requests.post("http://localhost:3333/images",
                           files=files, headers=headers)

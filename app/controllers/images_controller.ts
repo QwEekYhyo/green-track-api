@@ -14,19 +14,23 @@ export default class ImagesController {
         };
         const imageInfo = await uploadImageValidator.validate(truc);
 
-        const image = imageInfo.image;
+        const images = imageInfo.images;
         const report = await Report.findOrFail(imageInfo.reportId);
 
         if (auth.user!.id != report.userId && !auth.user!.isAgent)
             throw new UnauthorizedException("Your are not the author of this report");
 
-        await image!.move(app.makePath("uploads"), {
-            name: `${cuid()}.${image.extname}`,
-        });
+        let results = []
+        for (let image of images) {
+            await image.move(app.makePath("uploads"), {
+                name: `${cuid()}.${image.extname}`,
+            });
 
-        return await report.related("images").create({
-            fileName: image.fileName,
-        });
+            results.push(await report.related("images").create({
+                fileName: image.fileName,
+            }));
+        }
+        return results;
     }
 
     async downloadImage({ request, response }: HttpContext) {
