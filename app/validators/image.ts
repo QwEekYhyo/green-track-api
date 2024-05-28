@@ -7,7 +7,11 @@ export const uploadImageValidator = vine.compile(
                 size: "80mb",
                 extnames: ["jpg", "jpeg", "png", "gif"],
             }),
-        ),
+        ).optional(),
+        image: vine.file({
+                size: "80mb",
+                extnames: ["jpg", "jpeg", "png", "gif"],
+        }).optional().requiredIfMissing("images"),
         reportId: vine.number().positive(),
     })
 );

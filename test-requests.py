@@ -161,12 +161,19 @@ def upload_files():
     if TOKEN is not None:
         report_id = int(input("What is the id of your report ? "))
 
-        files = []
         filepath = "nothing"
+        filepaths = []
         while filepath != "":
             filepath = input("What is the path of your image ? ")
             if filepath != "":
-                files.append(("images", open(filepath, "rb")))
+                filepaths.append(filepath)
+
+        files = []
+        if len(filepaths) == 1:
+            files.append(("image", open(filepaths[0], "rb")))
+        else:
+            for path in filepaths:
+                files.append(("images", open(path, "rb")))
 
         files.append(("reportId", (None, json.dumps(report_id),
                     "application/json")))

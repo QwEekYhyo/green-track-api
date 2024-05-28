@@ -15,21 +15,36 @@ export default class ImagesController {
         const imageInfo = await uploadImageValidator.validate(truc);
 
         const images = imageInfo.images;
+        const singleImage = imageInfo.image;
         const report = await Report.findOrFail(imageInfo.reportId);
 
         if (auth.user!.id != report.userId && !auth.user!.isAgent)
             throw new UnauthorizedException("Your are not the author of this report");
 
         let results = []
-        for (let image of images) {
-            await image.move(app.makePath("uploads"), {
-                name: `${cuid()}.${image.extname}`,
+
+        if (images) {
+            for (let image of images) {
+                await image.move(app.makePath("uploads"), {
+                    name: `${cuid()}.${image.extname}`,
+                });
+
+                results.push(await report.related("images").create({
+                    fileName: image.fileName,
+                }));
+            }
+        }
+
+        if (singleImage) {
+            await singleImage.move(app.makePath("uploads"), {
+                name: `${cuid()}.${singleImage.extname}`,
             });
 
             results.push(await report.related("images").create({
-                fileName: image.fileName,
+                fileName: singleImage.fileName,
             }));
         }
+
         return results;
     }
 
